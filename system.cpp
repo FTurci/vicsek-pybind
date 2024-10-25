@@ -2,10 +2,9 @@
 #include <random>
 #include <fstream>
    
-System::System(int nparticles,double side,double dt,double noise)
+System::System(int nparticles,double sidex, double sidey, double dt, double noise)
 {
     this->nparticles = nparticles;
-    this->side = side;
     this->dt = dt;
     this->noise = noise;
     this->particles.resize(nparticles);
@@ -13,15 +12,16 @@ System::System(int nparticles,double side,double dt,double noise)
     std::random_device rd;  
     this->gen = std::mt19937(rd());
     // box
-    this->box.set_side(side);
+    this->box.set_sidex(sidex);
+    this->box.set_sidey(sidey);
 
 }
 
 void System::random_start()
 {
     for (Particle &p : particles){
-        p.x = gen_uniform(0,this->box.get_side());
-        p.y = gen_uniform(0,this->box.get_side());
+        p.x = gen_uniform(0,this->box.get_sidex());
+        p.y = gen_uniform(0,this->box.get_sidey());
         p.theta = gen_uniform(0,2*M_PI);
     }
 }
@@ -31,7 +31,8 @@ void System::update()
     // implement the Vicsek model dynamics
 
     std::vector<double> new_theta(nparticles);
-    double L = box.get_side();
+    double Lx = box.get_sidex();
+    double Ly = box.get_sidey();
 
     #pragma omp parallel for
     for (int i = 0; i < nparticles; i++){
@@ -47,10 +48,10 @@ void System::update()
                 double dx = particles[j].x - particles[i].x;
                 double dy = particles[j].y - particles[i].y;
 
-                if(dx>L*0.5) dx-=L;
-                if(dx<-L*0.5) dx+=L;
-                if(dy>L*0.5) dy-=L;
-                if(dy<-L*0.5) dy+=L;
+                if(dx>Lx*0.5) dx-=Lx;
+                if(dx<-Lx*0.5) dx+=Lx;
+                if(dy>Ly*0.5) dy-=Ly;
+                if(dy<-Ly*0.5) dy+=Ly;
                 
                 // calculate the distance between the two particles
                 double dist = std::sqrt(dx*dx + dy*dy);
@@ -78,10 +79,10 @@ void System::update()
         particles[i].y += std::sin(new_theta[i])*particles[i].v*dt;
         particles[i].theta = new_theta[i];
         // periodic boundaries
-        if (particles[i].x >L) particles[i].x -=L;
-        if (particles[i].x <0) particles[i].x += L;
-        if (particles[i].y >L) particles[i].y -=L;
-        if (particles[i].y <0) particles[i].y += L;
+        if (particles[i].x >Lx) particles[i].x -= Lx;
+        if (particles[i].x <0) particles[i].x += Lx;
+        if (particles[i].y >Ly) particles[i].y -= Ly;
+        if (particles[i].y <0) particles[i].y += Ly;
     }
 
     
@@ -90,7 +91,8 @@ void System::update()
 void System::print_status()
 {   puts("=== System status: ");
     std::cout<<" number of particles: "<<this->particles.size()<<std::endl;
-    std::cout<<" side: "<<this->side<<std::endl;
+    std::cout<<" sidex: "<<this->box.get_sidex()<<std::endl;
+    std::cout<<" sidex: "<<this->box.get_sidey()<<std::endl;
     std::cout<<" time step: "<<this->dt<<std::endl;
     
 }

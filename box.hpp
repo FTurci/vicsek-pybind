@@ -5,17 +5,20 @@
 class Box {
     public:
         // Default constructor
-        Box() : side(1.0) {}  // Initializes side to 1.0
+        Box() : Lx(1.0), Ly(1.0) {}  // Initializes side to 1.0
 
         // Parameterized constructor
-        Box(double _side) : side(_side) {}  // Initializes side to _side
+        Box(double _sidex, double _sidey) : Lx(_sidex), Ly(_sidey) {}  // Initializes side to _side
 
         // Method to get the side length (optional)
-        double get_side() const { return side; }
-        void set_side(double _side) { side = _side;}
+        double get_sidex() const { return Lx; }
+        double get_sidey() const { return Ly; }
+        void set_sidex(double _sidex) { Lx = _sidex;}
+        void set_sidey(double _sidey) { Ly = _sidey;}
 
     private:
-        double side;  // Side length of the box
+        double Lx;  // Side length of the box
+        double Ly;
 };
 
 #endif

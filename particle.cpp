@@ -5,7 +5,7 @@ Particle::Particle()
     this->x = 0.0;
     this->y = 0.0;
     this->theta = 0.0;
-    this->v = 1.0;
+    this->v = 0.5;
     this->radius = 1.0; // default radius is 1.0
 
 }

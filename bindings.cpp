@@ -9,10 +9,10 @@ namespace py = pybind11;
 PYBIND11_MODULE(myvic, m) {
     // Binding for the System class
     py::class_<System>(m, "System")
-        .def(py::init<int, double, double, double>(), 
-             py::arg("nparticles"), py::arg("side"), py::arg("dt"), py::arg("noise"))
+        .def(py::init<int, double,double, double, double>(), 
+             py::arg("nparticles"), py::arg("sidex"), py::arg("sidey"), py::arg("dt"), py::arg("noise"))
         .def_readonly("nparticles",&System::nparticles)
-        .def_readonly("side",&System::side)
+        .def_readwrite("noise",&System::noise)
         .def_readonly("dt",&System::dt)
         .def("random_start", &System::random_start)
         .def("update", &System::update)

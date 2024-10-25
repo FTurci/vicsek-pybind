@@ -14,14 +14,13 @@ class System{
     public:
         // member variables
         int nparticles;
-        int side;
         double dt;
         double noise;
         Box box;
 
         std::vector<Particle> particles;
         // member functions
-        System(int nparticles,double side,double dt,double noise);
+        System(int nparticles,double sidex, double sidey, double dt, double noise);
 
         // random initial condition
         void random_start();
